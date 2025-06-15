@@ -1,0 +1,233 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Visitantes - Painel Administrativo{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">
+        <i class="fas fa-users me-2"></i>
+        Visitantes do Site
+    </h1>
+    <div>
+        <button class="btn btn-outline-primary" onclick="location.reload()">
+            <i class="fas fa-sync-alt me-1"></i>
+            Atualizar
+        </button>
+    </div>
+</div>
+
+{% if visitantes.items %}
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>IP Address</th>
+                        <th>Página Visitada</th>
+                        <th>Referrer</th>
+                        <th>Data/Hora da Visita</th>
+                        <th>Tempo de Permanência</th>
+                        <th>User Agent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for visitante in visitantes.items %}
+                    <tr>
+                        <td>
+                            <strong>#{{ visitante.id }}</strong>
+                        </td>
+                        <td>
+                            <code>{{ visitante.ip_address }}</code>
+                        </td>
+                        <td>
+                            <span class="badge bg-primary">{{ visitante.pagina_visitada }}</span>
+                        </td>
+                        <td>
+                            {% if visitante.referrer %}
+                                <small class="text-muted">
+                                    {% if 'instagram' in visitante.referrer.lower() %}
+                                        <i class="fab fa-instagram text-danger me-1"></i>
+                                        Instagram
+                                    {% elif 'facebook' in visitante.referrer.lower() %}
+                                        <i class="fab fa-facebook text-primary me-1"></i>
+                                        Facebook
+                                    {% elif 'tiktok' in visitante.referrer.lower() %}
+                                        <i class="fab fa-tiktok text-dark me-1"></i>
+                                        TikTok
+                                    {% elif 'google' in visitante.referrer.lower() %}
+                                        <i class="fab fa-google text-warning me-1"></i>
+                                        Google
+                                    {% else %}
+                                        <i class="fas fa-external-link-alt me-1"></i>
+                                        {{ visitante.referrer[:30] }}...
+                                    {% endif %}
+                                </small>
+                            {% else %}
+                                <span class="text-muted">Direto</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div>
+                                {{ visitante.data_visita.strftime('%d/%m/%Y') if visitante.data_visita else '' }}
+                                <br>
+                                <small class="text-muted">{{ visitante.data_visita.strftime('%H:%M:%S') if visitante.data_visita else '' }}</small>
+                            </div>
+                        </td>
+                        <td>
+                            {% if visitante.tempo_permanencia %}
+                                {% set minutos = (visitante.tempo_permanencia // 60) %}
+                                {% set segundos = (visitante.tempo_permanencia % 60) %}
+                                {% if minutos > 0 %}
+                                    <span class="badge bg-success">{{ minutos }}m {{ segundos }}s</span>
+                                {% else %}
+                                    <span class="badge bg-warning">{{ segundos }}s</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <small class="text-muted" title="{{ visitante.user_agent }}">
+                                {% if visitante.user_agent %}
+                                    {% if 'Mobile' in visitante.user_agent or 'Android' in visitante.user_agent or 'iPhone' in visitante.user_agent %}
+                                        <i class="fas fa-mobile-alt text-info me-1"></i>
+                                        Mobile
+                                    {% elif 'Tablet' in visitante.user_agent or 'iPad' in visitante.user_agent %}
+                                        <i class="fas fa-tablet-alt text-info me-1"></i>
+                                        Tablet
+                                    {% else %}
+                                        <i class="fas fa-desktop text-secondary me-1"></i>
+                                        Desktop
+                                    {% endif %}
+                                    
+                                    {% if 'Chrome' in visitante.user_agent %}
+                                        <i class="fab fa-chrome text-warning ms-2"></i>
+                                    {% elif 'Firefox' in visitante.user_agent %}
+                                        <i class="fab fa-firefox text-danger ms-2"></i>
+                                    {% elif 'Safari' in visitante.user_agent %}
+                                        <i class="fab fa-safari text-primary ms-2"></i>
+                                    {% elif 'Edge' in visitante.user_agent %}
+                                        <i class="fab fa-edge text-info ms-2"></i>
+                                    {% endif %}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </small>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Paginação -->
+{% if visitantes.pages > 1 %}
+<nav aria-label="Navegação de páginas" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if visitantes.has_prev %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('admin.visitantes', page=visitantes.prev_num) }}">
+                <i class="fas fa-chevron-left"></i>
+            </a>
+        </li>
+        {% endif %}
+        
+        {% for page_num in visitantes.iter_pages() %}
+            {% if page_num %}
+                {% if page_num != visitantes.page %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('admin.visitantes', page=page_num) }}">{{ page_num }}</a>
+                </li>
+                {% else %}
+                <li class="page-item active">
+                    <span class="page-link">{{ page_num }}</span>
+                </li>
+                {% endif %}
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">...</span>
+            </li>
+            {% endif %}
+        {% endfor %}
+        
+        {% if visitantes.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('admin.visitantes', page=visitantes.next_num) }}">
+                <i class="fas fa-chevron-right"></i>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+<!-- Estatísticas Rápidas -->
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Total de Visitantes</h5>
+                <h3 class="text-primary">{{ visitantes.total }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Visitantes Hoje</h5>
+                <h3 class="text-success">
+                    {% set hoje = moment().format('YYYY-MM-DD') if moment else '' %}
+                    {% set visitantes_hoje = visitantes.items | selectattr('data_visita') | selectattr('data_visita', 'match', hoje + '.*') | list | length %}
+                    {{ visitantes_hoje }}
+                </h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Dispositivos Móveis</h5>
+                <h3 class="text-info">
+                    {% set mobile_count = visitantes.items | selectattr('user_agent') | selectattr('user_agent', 'match', '.*(Mobile|Android|iPhone).*') | list | length %}
+                    {{ mobile_count }}
+                </h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Redes Sociais</h5>
+                <h3 class="text-warning">
+                    {% set social_count = visitantes.items | selectattr('referrer') | selectattr('referrer', 'match', '.*(instagram|facebook|tiktok).*') | list | length %}
+                    {{ social_count }}
+                </h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<div class="card">
+    <div class="card-body text-center py-5">
+        <i class="fas fa-users fa-3x text-muted mb-3"></i>
+        <h4 class="text-muted">Nenhum visitante registrado</h4>
+        <p class="text-muted">Os visitantes aparecerão aqui quando acessarem o site.</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Auto-atualizar a cada 2 minutos
+setInterval(function() {
+    location.reload();
+}, 120000);
+</script>
+{% endblock %}
+

@@ -1,0 +1,279 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Eventos - Painel Administrativo{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">
+        <i class="fas fa-mouse-pointer me-2"></i>
+        Eventos do Site
+    </h1>
+    <div>
+        <button class="btn btn-outline-primary" onclick="location.reload()">
+            <i class="fas fa-sync-alt me-1"></i>
+            Atualizar
+        </button>
+    </div>
+</div>
+
+{% if eventos.items %}
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tipo de Evento</th>
+                        <th>IP Address</th>
+                        <th>Dados do Evento</th>
+                        <th>Data/Hora</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for evento in eventos.items %}
+                    <tr>
+                        <td>
+                            <strong>#{{ evento.id }}</strong>
+                        </td>
+                        <td>
+                            {% if evento.tipo_evento == 'CLIQUE_COMPRAR' %}
+                                <span class="badge bg-primary">
+                                    <i class="fas fa-shopping-cart me-1"></i>
+                                    Clique Comprar
+                                </span>
+                            {% elif evento.tipo_evento == 'CLIQUE_PIX' %}
+                                <span class="badge bg-warning">
+                                    <i class="fas fa-qrcode me-1"></i>
+                                    Clique PIX
+                                </span>
+                            {% elif evento.tipo_evento == 'CLIQUE_CREDITO' %}
+                                <span class="badge bg-success">
+                                    <i class="fas fa-credit-card me-1"></i>
+                                    Clique Crédito
+                                </span>
+                            {% elif evento.tipo_evento == 'CLIQUE_DEBITO' %}
+                                <span class="badge bg-info">
+                                    <i class="fas fa-credit-card me-1"></i>
+                                    Clique Débito
+                                </span>
+                            {% elif evento.tipo_evento == 'CLIQUE_BOLETO' %}
+                                <span class="badge bg-secondary">
+                                    <i class="fas fa-barcode me-1"></i>
+                                    Clique Boleto
+                                </span>
+                            {% elif evento.tipo_evento == 'CLIQUE_JA_PAGUEI' %}
+                                <span class="badge bg-success">
+                                    <i class="fas fa-check me-1"></i>
+                                    Já Paguei
+                                </span>
+                            {% elif evento.tipo_evento == 'FORMULARIO_PREENCHIDO' %}
+                                <span class="badge bg-primary">
+                                    <i class="fas fa-form me-1"></i>
+                                    Formulário
+                                </span>
+                            {% elif evento.tipo_evento == 'SCROLL_PAGINA' %}
+                                <span class="badge bg-light text-dark">
+                                    <i class="fas fa-scroll me-1"></i>
+                                    Scroll
+                                </span>
+                            {% elif evento.tipo_evento == 'TEMPO_PERMANENCIA' %}
+                                <span class="badge bg-info">
+                                    <i class="fas fa-clock me-1"></i>
+                                    Permanência
+                                </span>
+                            {% else %}
+                                <span class="badge bg-dark">
+                                    <i class="fas fa-mouse-pointer me-1"></i>
+                                    {{ evento.tipo_evento }}
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <code>{{ evento.ip_address }}</code>
+                        </td>
+                        <td>
+                            {% if evento.dados_evento %}
+                                <button class="btn btn-sm btn-outline-info" 
+                                        onclick="mostrarDados('{{ evento.dados_evento | replace("'", "\\'") }}')">
+                                    <i class="fas fa-eye me-1"></i>
+                                    Ver Dados
+                                </button>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div>
+                                {{ evento.data_evento.strftime('%d/%m/%Y') if evento.data_evento else '' }}
+                                <br>
+                                <small class="text-muted">{{ evento.data_evento.strftime('%H:%M:%S') if evento.data_evento else '' }}</small>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Paginação -->
+{% if eventos.pages > 1 %}
+<nav aria-label="Navegação de páginas" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if eventos.has_prev %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('admin.eventos', page=eventos.prev_num) }}">
+                <i class="fas fa-chevron-left"></i>
+            </a>
+        </li>
+        {% endif %}
+        
+        {% for page_num in eventos.iter_pages() %}
+            {% if page_num %}
+                {% if page_num != eventos.page %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('admin.eventos', page=page_num) }}">{{ page_num }}</a>
+                </li>
+                {% else %}
+                <li class="page-item active">
+                    <span class="page-link">{{ page_num }}</span>
+                </li>
+                {% endif %}
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">...</span>
+            </li>
+            {% endif %}
+        {% endfor %}
+        
+        {% if eventos.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('admin.eventos', page=eventos.next_num) }}">
+                <i class="fas fa-chevron-right"></i>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+<!-- Estatísticas de Eventos -->
+<div class="row mt-4">
+    <div class="col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6 class="card-title">Total de Eventos</h6>
+                <h4 class="text-primary">{{ eventos.total }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6 class="card-title">Cliques Comprar</h6>
+                <h4 class="text-success">
+                    {% set cliques_comprar = eventos.items | selectattr('tipo_evento', 'equalto', 'CLIQUE_COMPRAR') | list | length %}
+                    {{ cliques_comprar }}
+                </h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6 class="card-title">Cliques PIX</h6>
+                <h4 class="text-warning">
+                    {% set cliques_pix = eventos.items | selectattr('tipo_evento', 'equalto', 'CLIQUE_PIX') | list | length %}
+                    {{ cliques_pix }}
+                </h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6 class="card-title">Cliques Cartão</h6>
+                <h4 class="text-info">
+                    {% set cliques_cartao = eventos.items | selectattr('tipo_evento', 'match', 'CLIQUE_(CREDITO|DEBITO)') | list | length %}
+                    {{ cliques_cartao }}
+                </h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6 class="card-title">Já Paguei</h6>
+                <h4 class="text-success">
+                    {% set ja_paguei = eventos.items | selectattr('tipo_evento', 'equalto', 'CLIQUE_JA_PAGUEI') | list | length %}
+                    {{ ja_paguei }}
+                </h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6 class="card-title">Formulários</h6>
+                <h4 class="text-primary">
+                    {% set formularios = eventos.items | selectattr('tipo_evento', 'equalto', 'FORMULARIO_PREENCHIDO') | list | length %}
+                    {{ formularios }}
+                </h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<div class="card">
+    <div class="card-body text-center py-5">
+        <i class="fas fa-mouse-pointer fa-3x text-muted mb-3"></i>
+        <h4 class="text-muted">Nenhum evento registrado</h4>
+        <p class="text-muted">Os eventos aparecerão aqui quando os usuários interagirem com o site.</p>
+    </div>
+</div>
+{% endif %}
+
+<!-- Modal para mostrar dados do evento -->
+<div class="modal fade" id="dadosEventoModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Dados do Evento</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <pre id="dadosEventoContent" class="bg-light p-3 rounded"></pre>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function mostrarDados(dados) {
+    try {
+        const dadosObj = JSON.parse(dados);
+        const dadosFormatados = JSON.stringify(dadosObj, null, 2);
+        document.getElementById('dadosEventoContent').textContent = dadosFormatados;
+    } catch (e) {
+        document.getElementById('dadosEventoContent').textContent = dados;
+    }
+    
+    const modal = new bootstrap.Modal(document.getElementById('dadosEventoModal'));
+    modal.show();
+}
+
+// Auto-atualizar a cada 30 segundos
+setInterval(function() {
+    location.reload();
+}, 30000);
+</script>
+{% endblock %}
+

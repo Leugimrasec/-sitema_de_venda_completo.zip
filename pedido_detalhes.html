@@ -1,0 +1,308 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Pedido #{{ pedido.id }} - Painel Administrativo{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">
+        <i class="fas fa-shopping-cart me-2"></i>
+        Pedido #{{ pedido.id }}
+    </h1>
+    <div>
+        <a href="{{ url_for('admin.pedidos') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i>
+            Voltar
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Informações do Cliente -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-user me-2"></i>
+                    Informações do Cliente
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-4"><strong>Nome:</strong></div>
+                    <div class="col-sm-8">{{ pedido.cliente.nome_completo if pedido.cliente else 'N/A' }}</div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-4"><strong>CPF:</strong></div>
+                    <div class="col-sm-8">{{ pedido.cliente.cpf if pedido.cliente else 'N/A' }}</div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-4"><strong>Email:</strong></div>
+                    <div class="col-sm-8">
+                        <a href="mailto:{{ pedido.cliente.email if pedido.cliente else '' }}" class="text-decoration-none">
+                            {{ pedido.cliente.email if pedido.cliente else 'N/A' }}
+                        </a>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-4"><strong>Telefone:</strong></div>
+                    <div class="col-sm-8">
+                        <a href="https://wa.me/55{{ pedido.cliente.telefone.replace('(', '').replace(')', '').replace('-', '').replace(' ', '') if pedido.cliente else '' }}" 
+                           target="_blank" class="text-decoration-none">
+                            {{ pedido.cliente.telefone if pedido.cliente else 'N/A' }}
+                            <i class="fab fa-whatsapp ms-1 text-success"></i>
+                        </a>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-4"><strong>Cadastro:</strong></div>
+                    <div class="col-sm-8">
+                        {{ pedido.cliente.data_cadastro.strftime('%d/%m/%Y %H:%M') if pedido.cliente and pedido.cliente.data_cadastro else 'N/A' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Informações do Pedido -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-shopping-cart me-2"></i>
+                    Detalhes do Pedido
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-4"><strong>ID do Pedido:</strong></div>
+                    <div class="col-sm-8">#{{ pedido.id }}</div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-4"><strong>Valor:</strong></div>
+                    <div class="col-sm-8">
+                        <span class="h5 text-success">R$ {{ "%.2f"|format(pedido.valor) }}</span>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-4"><strong>Forma de Pagamento:</strong></div>
+                    <div class="col-sm-8">
+                        <span class="badge bg-info fs-6">{{ pedido.forma_pagamento }}</span>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-4"><strong>Status:</strong></div>
+                    <div class="col-sm-8">
+                        <span class="badge status-{{ pedido.status.lower() }} fs-6">{{ pedido.status }}</span>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-4"><strong>Data do Pedido:</strong></div>
+                    <div class="col-sm-8">
+                        {{ pedido.data_pedido.strftime('%d/%m/%Y %H:%M') if pedido.data_pedido else 'N/A' }}
+                    </div>
+                </div>
+                {% if pedido.data_pagamento %}
+                <hr>
+                <div class="row">
+                    <div class="col-sm-4"><strong>Data do Pagamento:</strong></div>
+                    <div class="col-sm-8">
+                        {{ pedido.data_pagamento.strftime('%d/%m/%Y %H:%M') }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Informações de Pagamento PIX -->
+{% if pedido.forma_pagamento == 'PIX' and pedido.chave_pix %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">
+                    <i class="fas fa-qrcode me-2"></i>
+                    Informações do PIX
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-2"><strong>Chave PIX:</strong></div>
+                    <div class="col-sm-10">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="chavePix" value="{{ pedido.chave_pix }}" readonly>
+                            <button class="btn btn-outline-secondary" type="button" onclick="copiarChavePix()">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <small class="text-muted">Chave PIX gerada automaticamente para este pedido</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Status da Planilha -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-file-excel me-2"></i>
+                    Status da Planilha
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if pedido.planilha_enviada %}
+                <div class="alert alert-success" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <strong>Planilha Enviada!</strong>
+                    <br>
+                    Data de envio: {{ pedido.data_envio_planilha.strftime('%d/%m/%Y %H:%M') if pedido.data_envio_planilha else 'N/A' }}
+                </div>
+                {% else %}
+                <div class="alert alert-warning" role="alert">
+                    <i class="fas fa-clock me-2"></i>
+                    <strong>Planilha Pendente</strong>
+                    <br>
+                    A planilha ainda não foi enviada para o cliente.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ações -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-cogs me-2"></i>
+                    Ações
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% if pedido.status != 'PAGO' %}
+                    <div class="col-md-3 mb-2">
+                        <button class="btn btn-success w-100" onclick="confirmarPagamento({{ pedido.id }})">
+                            <i class="fas fa-check me-2"></i>
+                            Confirmar Pagamento
+                        </button>
+                    </div>
+                    {% endif %}
+                    
+                    {% if pedido.status == 'PAGO' and not pedido.planilha_enviada %}
+                    <div class="col-md-3 mb-2">
+                        <button class="btn btn-info w-100" onclick="marcarPlanilhaEnviada({{ pedido.id }})">
+                            <i class="fas fa-paper-plane me-2"></i>
+                            Marcar como Enviada
+                        </button>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="col-md-3 mb-2">
+                        <a href="mailto:{{ pedido.cliente.email if pedido.cliente else '' }}?subject=Planilha Financeira - Pedido #{{ pedido.id }}" 
+                           class="btn btn-outline-primary w-100">
+                            <i class="fas fa-envelope me-2"></i>
+                            Enviar Email
+                        </a>
+                    </div>
+                    
+                    <div class="col-md-3 mb-2">
+                        <a href="https://wa.me/55{{ pedido.cliente.telefone.replace('(', '').replace(')', '').replace('-', '').replace(' ', '') if pedido.cliente else '' }}?text=Olá {{ pedido.cliente.nome_completo.split()[0] if pedido.cliente else '' }}, sobre seu pedido #{{ pedido.id }} da planilha financeira..." 
+                           target="_blank" class="btn btn-outline-success w-100">
+                            <i class="fab fa-whatsapp me-2"></i>
+                            WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function copiarChavePix() {
+    const chavePix = document.getElementById('chavePix');
+    chavePix.select();
+    chavePix.setSelectionRange(0, 99999);
+    document.execCommand('copy');
+    
+    // Feedback visual
+    const btn = event.target.closest('button');
+    const originalHTML = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-check"></i>';
+    btn.classList.remove('btn-outline-secondary');
+    btn.classList.add('btn-success');
+    
+    setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.classList.remove('btn-success');
+        btn.classList.add('btn-outline-secondary');
+    }, 2000);
+}
+
+function confirmarPagamento(pedidoId) {
+    if (confirm('Confirmar o pagamento deste pedido?')) {
+        fetch(`/admin/confirmar-pagamento/${pedidoId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Pagamento confirmado com sucesso!');
+                location.reload();
+            } else {
+                alert('Erro ao confirmar pagamento: ' + data.error);
+            }
+        })
+        .catch(error => {
+            alert('Erro ao confirmar pagamento: ' + error);
+        });
+    }
+}
+
+function marcarPlanilhaEnviada(pedidoId) {
+    if (confirm('Marcar planilha como enviada para este cliente?')) {
+        fetch(`/admin/marcar-planilha-enviada/${pedidoId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Planilha marcada como enviada!');
+                location.reload();
+            } else {
+                alert('Erro ao marcar planilha: ' + data.error);
+            }
+        })
+        .catch(error => {
+            alert('Erro ao marcar planilha: ' + error);
+        });
+    }
+}
+</script>
+{% endblock %}
+

@@ -1,0 +1,231 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Pedidos - Painel Administrativo{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">
+        <i class="fas fa-shopping-cart me-2"></i>
+        Gerenciar Pedidos
+    </h1>
+    <div>
+        <button class="btn btn-outline-primary" onclick="location.reload()">
+            <i class="fas fa-sync-alt me-1"></i>
+            Atualizar
+        </button>
+    </div>
+</div>
+
+{% if pedidos.items %}
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Cliente</th>
+                        <th>Email</th>
+                        <th>Telefone</th>
+                        <th>Forma de Pagamento</th>
+                        <th>Valor</th>
+                        <th>Status</th>
+                        <th>Data do Pedido</th>
+                        <th>Planilha Enviada</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pedido in pedidos.items %}
+                    <tr>
+                        <td>
+                            <strong>#{{ pedido.id }}</strong>
+                        </td>
+                        <td>
+                            <div>
+                                <strong>{{ pedido.cliente.nome_completo if pedido.cliente else 'N/A' }}</strong>
+                                <br>
+                                <small class="text-muted">CPF: {{ pedido.cliente.cpf if pedido.cliente else 'N/A' }}</small>
+                            </div>
+                        </td>
+                        <td>
+                            <a href="mailto:{{ pedido.cliente.email if pedido.cliente else '' }}" class="text-decoration-none">
+                                {{ pedido.cliente.email if pedido.cliente else 'N/A' }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="https://wa.me/55{{ pedido.cliente.telefone.replace('(', '').replace(')', '').replace('-', '').replace(' ', '') if pedido.cliente else '' }}" 
+                               target="_blank" class="text-decoration-none">
+                                {{ pedido.cliente.telefone if pedido.cliente else 'N/A' }}
+                            </a>
+                        </td>
+                        <td>
+                            <span class="badge bg-info">{{ pedido.forma_pagamento }}</span>
+                        </td>
+                        <td>
+                            <strong class="text-success">R$ {{ "%.2f"|format(pedido.valor) }}</strong>
+                        </td>
+                        <td>
+                            <span class="badge status-{{ pedido.status.lower() }}">
+                                {{ pedido.status }}
+                            </span>
+                        </td>
+                        <td>
+                            <div>
+                                {{ pedido.data_pedido.strftime('%d/%m/%Y') if pedido.data_pedido else '' }}
+                                <br>
+                                <small class="text-muted">{{ pedido.data_pedido.strftime('%H:%M') if pedido.data_pedido else '' }}</small>
+                            </div>
+                        </td>
+                        <td>
+                            {% if pedido.planilha_enviada %}
+                                <span class="badge bg-success">
+                                    <i class="fas fa-check me-1"></i>
+                                    Enviada
+                                </span>
+                                <br>
+                                <small class="text-muted">
+                                    {{ pedido.data_envio_planilha.strftime('%d/%m %H:%M') if pedido.data_envio_planilha else '' }}
+                                </small>
+                            {% else %}
+                                <span class="badge bg-warning">
+                                    <i class="fas fa-clock me-1"></i>
+                                    Pendente
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group-vertical btn-group-sm" role="group">
+                                <a href="{{ url_for('admin.pedido_detalhes', pedido_id=pedido.id) }}" 
+                                   class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-eye me-1"></i>
+                                    Ver
+                                </a>
+                                
+                                {% if pedido.status != 'PAGO' %}
+                                <button class="btn btn-outline-success btn-sm" 
+                                        onclick="confirmarPagamento({{ pedido.id }})">
+                                    <i class="fas fa-check me-1"></i>
+                                    Confirmar Pagamento
+                                </button>
+                                {% endif %}
+                                
+                                {% if pedido.status == 'PAGO' and not pedido.planilha_enviada %}
+                                <button class="btn btn-outline-info btn-sm" 
+                                        onclick="marcarPlanilhaEnviada({{ pedido.id }})">
+                                    <i class="fas fa-paper-plane me-1"></i>
+                                    Marcar como Enviada
+                                </button>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Paginação -->
+{% if pedidos.pages > 1 %}
+<nav aria-label="Navegação de páginas" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if pedidos.has_prev %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('admin.pedidos', page=pedidos.prev_num) }}">
+                <i class="fas fa-chevron-left"></i>
+            </a>
+        </li>
+        {% endif %}
+        
+        {% for page_num in pedidos.iter_pages() %}
+            {% if page_num %}
+                {% if page_num != pedidos.page %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('admin.pedidos', page=page_num) }}">{{ page_num }}</a>
+                </li>
+                {% else %}
+                <li class="page-item active">
+                    <span class="page-link">{{ page_num }}</span>
+                </li>
+                {% endif %}
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">...</span>
+            </li>
+            {% endif %}
+        {% endfor %}
+        
+        {% if pedidos.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('admin.pedidos', page=pedidos.next_num) }}">
+                <i class="fas fa-chevron-right"></i>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+{% else %}
+<div class="card">
+    <div class="card-body text-center py-5">
+        <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+        <h4 class="text-muted">Nenhum pedido encontrado</h4>
+        <p class="text-muted">Os pedidos aparecerão aqui quando os clientes fizerem compras.</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function confirmarPagamento(pedidoId) {
+    if (confirm('Confirmar o pagamento deste pedido?')) {
+        fetch(`/admin/confirmar-pagamento/${pedidoId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Pagamento confirmado com sucesso!');
+                location.reload();
+            } else {
+                alert('Erro ao confirmar pagamento: ' + data.error);
+            }
+        })
+        .catch(error => {
+            alert('Erro ao confirmar pagamento: ' + error);
+        });
+    }
+}
+
+function marcarPlanilhaEnviada(pedidoId) {
+    if (confirm('Marcar planilha como enviada para este cliente?')) {
+        fetch(`/admin/marcar-planilha-enviada/${pedidoId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Planilha marcada como enviada!');
+                location.reload();
+            } else {
+                alert('Erro ao marcar planilha: ' + data.error);
+            }
+        })
+        .catch(error => {
+            alert('Erro ao marcar planilha: ' + error);
+        });
+    }
+}
+</script>
+{% endblock %}
+

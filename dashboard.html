@@ -1,0 +1,252 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Dashboard - Painel Administrativo{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">
+        <i class="fas fa-tachometer-alt me-2"></i>
+        Dashboard
+    </h1>
+    <div class="text-muted">
+        <i class="fas fa-calendar me-1"></i>
+        {{ moment().format('DD/MM/YYYY HH:mm') if moment else '' }}
+    </div>
+</div>
+
+<!-- Estatísticas Principais -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card">
+            <div class="card-body text-center">
+                <i class="fas fa-users fa-2x mb-3"></i>
+                <h3 class="mb-1">{{ estatisticas.total_visitantes }}</h3>
+                <p class="mb-0">Total de Visitantes</p>
+                <small class="opacity-75">
+                    <i class="fas fa-calendar-day me-1"></i>
+                    Hoje: {{ estatisticas.visitantes_hoje }}
+                </small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card warning">
+            <div class="card-body text-center">
+                <i class="fas fa-shopping-cart fa-2x mb-3"></i>
+                <h3 class="mb-1">{{ estatisticas.total_pedidos }}</h3>
+                <p class="mb-0">Total de Pedidos</p>
+                <small class="opacity-75">
+                    <i class="fas fa-calendar-day me-1"></i>
+                    Hoje: {{ estatisticas.pedidos_hoje }}
+                </small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card success">
+            <div class="card-body text-center">
+                <i class="fas fa-check-circle fa-2x mb-3"></i>
+                <h3 class="mb-1">{{ estatisticas.pedidos_pagos }}</h3>
+                <p class="mb-0">Pedidos Pagos</p>
+                <small class="opacity-75">
+                    <i class="fas fa-percentage me-1"></i>
+                    Taxa: {{ estatisticas.taxa_conversao }}%
+                </small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card info">
+            <div class="card-body text-center">
+                <i class="fas fa-dollar-sign fa-2x mb-3"></i>
+                <h3 class="mb-1">R$ {{ "%.2f"|format(estatisticas.receita_total) }}</h3>
+                <p class="mb-0">Receita Total</p>
+                <small class="opacity-75">
+                    <i class="fas fa-chart-line me-1"></i>
+                    Vendas confirmadas
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Últimos Visitantes -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-users me-2"></i>
+                    Últimos Visitantes
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if ultimos_visitantes %}
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>IP</th>
+                                <th>Página</th>
+                                <th>Data/Hora</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for visitante in ultimos_visitantes %}
+                            <tr>
+                                <td>
+                                    <small class="text-muted">{{ visitante.ip_address }}</small>
+                                </td>
+                                <td>
+                                    <small>{{ visitante.pagina_visitada }}</small>
+                                </td>
+                                <td>
+                                    <small class="text-muted">
+                                        {{ visitante.data_visita.strftime('%d/%m %H:%M') if visitante.data_visita else '' }}
+                                    </small>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center text-muted py-3">
+                    <i class="fas fa-inbox fa-2x mb-2"></i>
+                    <p class="mb-0">Nenhum visitante ainda</p>
+                </div>
+                {% endif %}
+                
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('admin.visitantes') }}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-eye me-1"></i>
+                        Ver Todos
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Últimos Pedidos -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-shopping-cart me-2"></i>
+                    Últimos Pedidos
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if ultimos_pedidos %}
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pedido in ultimos_pedidos %}
+                            <tr>
+                                <td>
+                                    <small>{{ pedido.cliente.nome_completo if pedido.cliente else 'N/A' }}</small>
+                                </td>
+                                <td>
+                                    <small class="text-success fw-bold">R$ {{ "%.2f"|format(pedido.valor) }}</small>
+                                </td>
+                                <td>
+                                    <span class="badge status-{{ pedido.status.lower() }}">
+                                        {{ pedido.status }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <small class="text-muted">
+                                        {{ pedido.data_pedido.strftime('%d/%m %H:%M') if pedido.data_pedido else '' }}
+                                    </small>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center text-muted py-3">
+                    <i class="fas fa-shopping-cart fa-2x mb-2"></i>
+                    <p class="mb-0">Nenhum pedido ainda</p>
+                </div>
+                {% endif %}
+                
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('admin.pedidos') }}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-list me-1"></i>
+                        Ver Todos
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ações Rápidas -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-bolt me-2"></i>
+                    Ações Rápidas
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-2">
+                        <a href="{{ url_for('admin.pedidos') }}" class="btn btn-primary w-100">
+                            <i class="fas fa-shopping-cart me-2"></i>
+                            Gerenciar Pedidos
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{{ url_for('admin.visitantes') }}" class="btn btn-info w-100">
+                            <i class="fas fa-users me-2"></i>
+                            Ver Visitantes
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{{ url_for('admin.eventos') }}" class="btn btn-warning w-100">
+                            <i class="fas fa-mouse-pointer me-2"></i>
+                            Eventos do Site
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <button class="btn btn-success w-100" onclick="atualizarEstatisticas()">
+                            <i class="fas fa-sync-alt me-2"></i>
+                            Atualizar Dados
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function atualizarEstatisticas() {
+    // Recarregar a página para atualizar as estatísticas
+    location.reload();
+}
+
+// Auto-atualizar a cada 5 minutos
+setInterval(function() {
+    location.reload();
+}, 300000);
+</script>
+{% endblock %}
+
