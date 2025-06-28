@@ -1,0 +1,353 @@
+/* Otimizações específicas para dispositivos móveis */
+
+@media (max-width: 992px) {
+    /* Ajustes gerais */
+    section {
+        padding: 60px 0;
+    }
+    
+    h1 {
+        font-size: 2rem !important;
+    }
+    
+    h2 {
+        font-size: 1.8rem !important;
+    }
+    
+    /* Header e navegação */
+    .nav {
+        display: none; /* Esconde a navegação em dispositivos móveis */
+    }
+    
+    /* Hero section */
+    .hero {
+        padding: 120px 0 60px;
+    }
+    
+    .hero .container {
+        flex-direction: column;
+    }
+    
+    .hero-content {
+        padding-right: 0;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+    
+    /* Seções de conteúdo */
+    .solucao-content {
+        flex-direction: column;
+    }
+    
+    .solucao-text {
+        order: 2;
+    }
+    
+    .solucao-image {
+        order: 1;
+        margin-bottom: 30px;
+    }
+    
+    /* Seção de compra */
+    .comprar-content {
+        flex-direction: column;
+    }
+    
+    .comprar-info {
+        margin-bottom: 30px;
+    }
+    
+    /* Footer */
+    .footer-content {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    /* Botão de compra fixo no mobile */
+    .mobile-cta {
+        display: block;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 15px;
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(5px);
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        z-index: 999;
+        text-align: center;
+    }
+    
+    .btn-mobile-comprar {
+        display: inline-block;
+        width: 90%;
+        font-size: 1.1rem;
+        padding: 18px;
+        border-radius: 8px;
+        background-color: #0096c7;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.03);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+    
+    /* Adiciona espaço no final da página para o botão fixo */
+    body {
+        padding-bottom: 80px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Ajustes para telas menores */
+    .problema-grid,
+    .beneficios-grid,
+    .depoimentos-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .passos {
+        flex-direction: column;
+    }
+    
+    .passo {
+        margin-bottom: 30px;
+    }
+    
+    /* Modal de pagamento */
+    .modal-content {
+        padding: 20px;
+        width: 95%;
+        max-height: 85vh;
+        overflow-y: auto;
+    }
+    
+    /* Formulário de compra - Opções de Pagamento */
+    .payment-options {
+        display: flex;
+        flex-direction: column; /* Empilha as opções verticalmente */
+        gap: 10px; /* Espaço entre as opções */
+        width: 100%;
+    }
+    
+    .payment-option {
+        width: 100%;
+        margin-bottom: 0; /* Remove margem inferior, usa gap */
+    }
+    
+    .payment-option label {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        padding: 15px; /* Aumenta área de toque */
+        border: 2px solid #ddd; /* Borda mais visível */
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.2s, border-color 0.2s;
+        font-size: 1rem; /* Tamanho de fonte legível */
+    }
+
+    .payment-option label i {
+        margin-right: 12px; /* Espaço maior para o ícone */
+        font-size: 1.2em; /* Ícone um pouco maior */
+    }
+    
+    .payment-option input[type="radio"] {
+        appearance: none; /* Esconde o radio button padrão */
+        -webkit-appearance: none;
+        margin: 0;
+        width: 0; /* Ocupa zero espaço */
+        height: 0;
+        position: absolute; /* Tira do fluxo normal */
+        opacity: 0;
+    }
+
+    /* Estilo para opção selecionada */
+    .payment-option input[type="radio"]:checked + label {
+        background-color: #e7f5ff; /* Fundo azul claro */
+        border-color: #007bff; /* Borda azul */
+        font-weight: bold;
+    }
+
+    /* Efeito hover/focus para acessibilidade */
+    .payment-option label:hover {
+        background-color: #f8f9fa;
+    }
+    .payment-option input[type="radio"]:focus + label {
+        outline: 2px solid #0056b3; /* Outline para foco */
+        outline-offset: 2px;
+    }
+    
+    /* Ajustes específicos para o formulário de compra */
+    .form-group input {
+        font-size: 16px; /* Evita zoom automático em iOS */
+        padding: 15px; /* Área de toque maior */
+        border-radius: 8px;
+        width: 100%;
+        -webkit-appearance: none; /* Remove aparência padrão em iOS */
+    }
+    
+    .btn-comprar {
+        padding: 18px; /* Botão maior para facilitar o toque */
+        width: 100%;
+        font-size: 1.1rem;
+        border-radius: 8px;
+    }
+    
+    /* Ajustes para o modal de pagamento */
+    .pix-key {
+        display: flex; /* Alinha chave e botão lado a lado se houver espaço */
+        flex-direction: row; /* Muda para linha por padrão */
+        align-items: center;
+        background-color: #f5f5f5;
+        padding: 10px 15px;
+        border-radius: 8px;
+        margin: 15px 0;
+        flex-wrap: wrap; /* Permite quebrar linha se não couber */
+    }
+    
+    #fixed-pix-key { /* Alterado de .pix-key-value para ID específico */
+        flex-grow: 1; /* Ocupa espaço disponível */
+        padding: 10px;
+        background: white;
+        border-radius: 6px;
+        word-break: break-all;
+        font-size: 0.9rem; /* Ajusta tamanho da chave */
+        margin-right: 10px; /* Espaço antes do botão */
+        margin-bottom: 5px; /* Espaço se quebrar linha */
+        text-align: center;
+    }
+    
+    #copy-pix { /* Alterado de .btn-copy para ID específico */
+        margin-left: auto; /* Empurra para a direita */
+        padding: 10px 15px;
+        border-radius: 6px;
+        white-space: nowrap; /* Evita quebra de linha no botão */
+        margin-bottom: 5px; /* Espaço se quebrar linha */
+    }
+
+    /* Ajuste para telas muito pequenas onde o PIX quebra linha */
+    @media (max-width: 400px) {
+        .pix-key {
+             flex-direction: column; /* Força coluna */
+             align-items: stretch; /* Estica itens */
+        }
+        #fixed-pix-key {
+            margin-right: 0;
+            margin-bottom: 10px;
+        }
+        #copy-pix {
+            margin-left: 0;
+            width: 100%;
+        }
+    }
+    
+    .btn-payment-confirmed,
+    .btn-payment-link {
+        padding: 15px;
+        width: 100%;
+        margin: 10px 0;
+        border-radius: 8px;
+        font-size: 1rem;
+    }
+    
+    /* Melhorias para botões de ação */
+    .action-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    /* Melhorias para feedback visual */
+    .form-group.error input {
+        border-color: #ff4d4d;
+    }
+    
+    .error-message {
+        color: #ff4d4d;
+        font-size: 0.85rem;
+        margin-top: 5px;
+    }
+}
+
+/* Melhorias específicas para o botão de compra mobile */
+@media (max-width: 992px) {
+    .mobile-cta {
+        padding: 15px;
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(5px);
+    }
+    
+    .btn-mobile-comprar {
+        font-size: 1.1rem;
+        padding: 18px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Ajustes para o formulário de compra em mobile */
+    #purchase-form {
+        margin-bottom: 20px;
+    }
+    
+    /* Melhorias para o modal em mobile */
+    .modal {
+        align-items: flex-end;
+    }
+    
+    .modal-content {
+        border-radius: 20px 20px 0 0;
+        max-height: 85vh;
+    }
+    
+    /* Melhorias para o feedback de toque */
+    .btn-comprar:active,
+    .btn-mobile-comprar:active,
+    .btn-payment-confirmed:active,
+    #copy-pix:active {
+        transform: translateY(2px);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* Melhorias específicas para dispositivos muito pequenos */
+@media (max-width: 375px) {
+    h1 {
+        font-size: 1.8rem !important;
+    }
+    
+    h2 {
+        font-size: 1.6rem !important;
+    }
+    
+    .hero {
+        padding: 100px 0 50px;
+    }
+    
+    .modal-content {
+        padding: 15px;
+    }
+    
+    .form-group label {
+        font-size: 0.9rem;
+    }
+
+    .payment-option label {
+        padding: 12px; /* Reduz um pouco o padding */
+        font-size: 0.95rem;
+    }
+}
+

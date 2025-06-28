@@ -3,514 +3,464 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planilha de Controle Financeiro - Transforme sua Vida Financeira</title>
-    <meta name="description" content="Planilha completa para controle financeiro com atualizações automáticas, gráficos e categorização inteligente. Organize suas finanças de forma simples e eficaz.">
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --primary-color: #1e40af;
-            --secondary-color: #0d9488;
-            --accent-color: #0891b2;
-            --success-color: #059669;
-            --warning-color: #d97706;
-            --danger-color: #dc2626;
-            --dark-color: #1f2937;
-            --light-color: #f8fafc;
-            --text-color: #374151;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            background-color: var(--light-color);
-        }
-        
-        /* Header */
-        .navbar {
-            background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
-            padding: 1rem 0;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-        
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: white !important;
-        }
-        
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 4rem 0;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><polygon points="0,0 1000,0 1000,100 0,80"/></svg>');
-            background-size: cover;
-        }
-        
-        .hero-content {
-            position: relative;
-            z-index: 2;
-        }
-        
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-        }
-        
-        .hero .lead {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-        }
-        
-        .planilha-preview {
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 5rem; /* Aumentado ainda mais para maior espaçamento */
-        }
-        
-        /* Sections */
-        .section {
-            padding: 5rem 0;
-        }
-        
-        .section-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 3rem;
-            color: var(--dark-color);
-        }
-        
-        /* Problem Section */
-        .problem-section {
-            background: linear-gradient(135deg, #fee2e2, #fef3c7);
-            position: relative;
-        }
-        
-        .problem-card {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
-            transition: transform 0.3s ease;
-        }
-        
-        .problem-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .problem-icon {
-            font-size: 3rem;
-            color: var(--danger-color);
-            margin-bottom: 1rem;
-        }
-        
-        /* Solution Section */
-        .solution-section {
-            background: linear-gradient(135deg, #ecfdf5, #f0f9ff);
-        }
-        
-        /* Benefits */
-        .benefit-card {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-            height: 100%;
-        }
-        
-        .benefit-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .benefit-icon {
-            font-size: 3rem;
-            color: var(--secondary-color);
-            margin-bottom: 1rem;
-        }
-        
-        /* How it Works */
-        .step-card {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            position: relative;
-            margin-bottom: 2rem;
-        }
-        
-        .step-number {
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--primary-color);
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1.2rem;
-        }
-        
-        /* Testimonials */
-        .testimonial-card {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
-        }
-        
-        .testimonial-rating {
-            color: #fbbf24;
-            margin-bottom: 1rem;
-        }
-        
-        /* Purchase Section */
-        .purchase-section {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            position: relative;
-        }
-        
-        .price-card {
-            background: white;
-            color: var(--dark-color);
-            border-radius: 20px;
-            padding: 3rem 2rem;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .price-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-        }
-        
-        .price {
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--success-color);
-            margin: 1rem 0;
-        }
-        
-        .guarantee-badge {
-            background: var(--success-color);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
-            font-weight: 600;
-            display: inline-block;
-            margin-top: 1rem;
-        }
-        
-        /* Buttons */
-        .btn-primary-custom {
-            background: linear-gradient(135deg, #059669, #10b981); /* Mais verde que azul */
-            border: none;
-            border-radius: 50px;
-            padding: 1rem 2rem;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
-        }
-        
-        .btn-primary-custom:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(5, 150, 105, 0.4);
-        }
-        
-        .btn-comprar {
-            background: linear-gradient(135deg, var(--success-color), var(--secondary-color));
-            border: none;
-            border-radius: 50px;
-            padding: 1.2rem 3rem;
-            font-weight: 700;
-            font-size: 1.3rem;
-            color: white;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
-            animation: pulse 2s infinite;
-        }
-        
-        .btn-comprar:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(5, 150, 105, 0.5);
-            color: white;
-        }
-        
-        @keyframes pulse {
-            0% { box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4); }
-            50% { box-shadow: 0 6px 20px rgba(5, 150, 105, 0.6); }
-            100% { box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4); }
-        }
-        
-        /* FAQ */
-        .faq-item {
-            background: white;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .faq-header {
-            padding: 1.5rem;
-            cursor: pointer;
-            border-bottom: 1px solid #e5e7eb;
-            transition: background-color 0.3s ease;
-        }
-        
-        .faq-header:hover {
-            background-color: #f9fafb;
-        }
-        
-        .faq-content {
-            padding: 1.5rem;
-            display: none;
-        }
-        
-        /* Footer */
-        .footer {
-            background: var(--dark-color);
-            color: white;
-            padding: 3rem 0 1rem;
-        }
-        
-        /* Mobile Optimizations */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .hero .lead {
-                font-size: 1.1rem;
-            }
-            
-            .section-title {
-                font-size: 2rem;
-            }
-            
-            .price {
-                font-size: 2.5rem;
-            }
-            
-            .btn-comprar {
-                font-size: 1.1rem;
-                padding: 1rem 2rem;
-            }
-        }
-        
-        /* Fixed Buy Button for Mobile */
-        .fixed-buy-button {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            display: none;
-        }
-        
-        @media (max-width: 768px) {
-            .fixed-buy-button {
-                display: block;
-            }
-        }
-        
-        /* Modal Styles */
-        .modal-content {
-            border-radius: 20px;
-            border: none;
-        }
-        
-        .modal-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            border-radius: 20px 20px 0 0;
-        }
-        
-        .form-control {
-            border-radius: 10px;
-            border: 2px solid #e5e7eb;
-            padding: 12px 16px;
-            transition: border-color 0.3s ease;
-        }
-        
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
-        }
-        
-        .payment-option {
-            border: 2px solid #e5e7eb;
-            border-radius: 15px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .payment-option:hover {
-            border-color: var(--primary-color);
-            background-color: #f8fafc;
-        }
-        
-        .payment-option.selected {
-            border-color: var(--primary-color);
-            background-color: #eff6ff;
-        }
-        
-        .payment-icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .pix-details {
-            background: #fef3c7;
-            border: 2px solid #f59e0b;
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin-bottom: 1rem; /* Alterado para margin-bottom */
-            display: none;
-        }
-        .pix-key {
-            background: white;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            padding: 10px;
-            font-family: monospace;
-            word-break: break-all;
-            margin: 1rem 0;
-        }
-
-        .card-details {
-            background: #e0f2fe;
-            border: 2px solid #3b82f6;
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin-top: 1rem;
-            display: none;
-        }
-    </style>
+    <title>Chave Financeira Libertadora - Transforme suas finanças</title>
+    <link rel="stylesheet" href="estilos.css">
+    <link rel="stylesheet" href="mobile_optimization.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <header class="header">
         <div class="container">
-            <a class="navbar-brand" href="#">
-                <i class="fas fa-chart-line me-2"></i>
-                Planilha Financeira
-            </a>
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link text-white" href="tel:61999226353">
-                    <i class="fab fa-whatsapp me-1"></i>
-                    (61) 99922-6353
-                </a>
-                <a class="nav-link text-white" href="mailto:contatochavefinanceira@gmail.com">
-                    <i class="fas fa-envelope me-1"></i>
-                    contatochavefinanceira@gmail.com
-                </a>
+            <div class="logo">
+                <h1>🔑 Chave Financeira Libertadora</h1>
             </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="#beneficios">Benefícios</a></li>
+                    <li><a href="#como-funciona">Como Funciona</a></li>
+                    <li><a href="#depoimentos">Depoimentos</a></li>
+                    <li><a href="#" class="btn-nav btn-trigger-purchase">Comprar</a></li>
+                </ul>
+                <div class="contact-info">
+                    <a href="https://wa.me/5561999226352" target="_blank" class="contact-link">
+                        <i class="fab fa-whatsapp"></i> (61) 99922-6352
+                    </a>
+                    <a href="mailto:contatochavefinanceira@gmail.com" class="contact-link">
+                        <i class="fas fa-envelope"></i> contatochavefinanceira@gmail.com
+                    </a>
+                </div>
+            </nav>
         </div>
-    </nav>
+    </header>
 
-    <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <div class="hero-content">
-                        <h1>Transforme Sua Vida Financeira</h1>
-                        <p class="lead">
-                            A planilha completa que vai organizar suas finanças, 
-                            controlar seus gastos e te ajudar a alcançar seus objetivos financeiros.
-                        </p>
-                        <div class="d-flex flex-wrap gap-3 mb-4">
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-check-circle me-2"></i>
-                                <span>Atualização Automática</span>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-chart-pie me-2"></i>
-                                <span>Gráficos Visuais</span>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-mobile-alt me-2"></i>
-                                <span>Funciona no Celular</span>
-                            </div>
-                        </div>
-                        <!-- Botão removido para evitar sobreposição no mobile -->
+            <div class="hero-content">
+                <h1>Transforme Sua Vida Financeira</h1>
+                <p>A planilha completa que vai organizar suas finanças, controlar seus gastos e te ajudar a alcançar seus objetivos financeiros.</p>
+                <div class="hero-features">
+                    <div class="feature">
+                        <i class="fas fa-sync-alt"></i>
+                        <span>Atualização Automática</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Gráficos Visuais</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-mobile-alt"></i>
+                        <span>Funciona no Celular</span>
                     </div>
                 </div>
-                <div class="col-lg-6 text-center">
-                    <img src="planilha_nova.jpeg" alt="Planilha de Controle Financeiro" class="planilha-preview">
-                    <div class="mt-4">
-                        <button class="btn btn-primary btn-lg pulse-button w-100" onclick="abrirModalCompra()">
-                            <i class="fas fa-key me-2"></i>
-                            ACESSAR MINHA LIBERDADE FINANCEIRA
-                        </button>
-                    </div>
+                <a href="#comprar" class="btn-primary btn-hero">🔑 ACESSAR MINHA LIBERDADE FINANCEIRA</a>
+            </div>
+            <div class="hero-image">
+                <img src="assets/planilha_nova_visualizacao.jpeg" alt="Visualização da Chave Financeira Libertadora">
+            </div>
+        </div>
+    </section>
+
+    <section class="problema" id="problema">
+        <div class="container">
+            <h2>Você Está Cansado de...</h2>
+            <div class="problema-grid">
+                <div class="problema-item">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Contas em Atraso</h3>
+                    <p>Perder o controle dos vencimentos e pagar juros desnecessários por esquecimento.</p>
                 </div>
+                <div class="problema-item">
+                    <i class="fas fa-question-circle"></i>
+                    <h3>Não Saber Para Onde Vai o Dinheiro</h3>
+                    <p>Chegar no final do mês sem entender onde gastou todo o seu salário.</p>
+                </div>
+                <div class="problema-item">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Falta de Planejamento</h3>
+                    <p>Viver sem metas financeiras claras e não conseguir poupar para seus sonhos.</p>
                 </div>
             </div>
         </div>
-    </section>    <!-- Problem Section -->
-    <section class="section problem-section" id="problema">
+    </section>
+
+    <section class="solucao" id="solucao">
         <div class="container">
-            <h2 class="section-title">Você Está Cansado de...</h2>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="problem-card">
-                        <div class="problem-icon">
-                            <i class="fas fa-exclamation-triangle"></i>
+            <h2>A Solução Está Aqui!</h2>
+            <div class="solucao-content">
+                <div class="solucao-text">
+                    <h3>Nossa Planilha de Controle Financeiro</h3>
+                    <p>Uma ferramenta completa e intuitiva que automatiza o controle das suas finanças, te dando clareza total sobre sua situação financeira.</p>
+                    
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <div>
+                                <strong>Controle Automático de Status:</strong> Atualiza automaticamente quando as contas vencem ou são pagas
+                            </div>
                         </div>
-                        <h4>Contas em Atraso</h4>
-                  
-(Content
-(Content truncated due to size limit. Use line ranges to read in chunks)
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <div>
+                                <strong>Categorização Inteligente:</strong> Organize gastos por categoria e veja onde está gastando mais
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <div>
+                                <strong>Gráficos Visuais:</strong> Visualize suas finanças com gráficos de pizza e barras
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <div>
+                                <strong>Controle de Investimentos:</strong> Acompanhe seus investimentos e reserva de emergência
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="solucao-image">
+                    <img src="assets/planilha_nova_visualizacao.jpeg" alt="Planilha Financeira">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="como-funciona" id="como-funciona">
+        <div class="container">
+            <h2>Como Funciona</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h3>Baixe a Planilha</h3>
+                    <p>Receba o arquivo Excel por email após a compra</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <h3>Preencha Seus Dados</h3>
+                    <p>Adicione suas receitas, despesas e investimentos</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3>Veja a Mágica</h3>
+                    <p>A planilha atualiza automaticamente status e gráficos</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3>Alcance Seus Objetivos</h3>
+                    <p>Tenha controle total e realize seus sonhos financeiros</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="beneficios" id="beneficios">
+        <div class="container">
+            <h2>Por Que Escolher Nossa Planilha?</h2>
+            <div class="beneficios-grid">
+                <div class="beneficio">
+                    <div class="beneficio-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>Automação Inteligente</h3>
+                    <p>Status das contas atualiza automaticamente. Nunca mais esqueça de uma conta!</p>
+                </div>
+                <div class="beneficio">
+                    <div class="beneficio-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h3>Visualização Clara</h3>
+                    <p>Gráficos coloridos mostram exatamente para onde vai seu dinheiro.</p>
+                </div>
+                <div class="beneficio">
+                    <div class="beneficio-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Funciona no Celular</h3>
+                    <p>Acesse e atualize suas finanças de qualquer lugar, a qualquer hora.</p>
+                </div>
+                <div class="beneficio">
+                    <div class="beneficio-icon">
+                        <i class="fas fa-puzzle-piece"></i>
+                    </div>
+                    <h3>Controle de Investimentos</h3>
+                    <p>Acompanhe seus investimentos e metas de poupança em um só lugar.</p>
+                </div>
+                <div class="beneficio">
+                    <div class="beneficio-icon">
+                        <i class="fas fa-check-square"></i>
+                    </div>
+                    <h3>Organização Mensal</h3>
+                    <p>Cada mês tem sua própria aba para melhor organização temporal.</p>
+                </div>
+                <div class="beneficio">
+                    <div class="beneficio-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Garantia de 7 Dias</h3>
+                    <p>Suporte completo por 7 dias. Sua satisfação é garantida!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="depoimentos" id="depoimentos">
+        <div class="container">
+            <h2>O Que Nossos Clientes Dizem</h2>
+            <div class="depoimentos-grid">
+                <div class="depoimento">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p>"Finalmente consegui organizar minhas finanças! A planilha é muito fácil de usar e os gráficos me ajudam a entender onde estou gastando mais."</p>
+                    <div class="depoimento-autor">
+                        <strong>Maria Silva</strong>
+                        <span>Professora</span>
+                    </div>
+                </div>
+                <div class="depoimento">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p>"Nunca mais esqueci de pagar uma conta! O sistema de atualização automática é perfeito. Recomendo para todos."</p>
+                    <div class="depoimento-autor">
+                        <strong>João Santos</strong>
+                        <span>Empresário</span>
+                    </div>
+                </div>
+                <div class="depoimento">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p>"Em 3 meses consegui economizar R$ 500 por mês só organizando melhor meus gastos. Valeu cada centavo!"</p>
+                    <div class="depoimento-autor">
+                        <strong>Ana Costa</strong>
+                        <span>Enfermeira</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-final">
+        <div class="container">
+            <h2>Transforme Sua Vida Financeira Hoje!</h2>
+            <p>Não deixe para amanhã o que pode mudar sua vida hoje. Milhares de pessoas já organizaram suas finanças com nossa planilha.</p>
+            
+            <div class="oferta-box">
+                <h3>Planilha Completa de Controle Financeiro</h3>
+                <div class="preco-destaque">
+                    <span class="preco">R$ 50,00</span>
+                </div>
+                <p class="preco-info">Pagamento único • Acesso vitalício</p>
+                
+                <div class="beneficios-lista">
+                    <div class="beneficio-item">
+                        <i class="fas fa-check"></i>
+                        <span>Atualização automática de status</span>
+                    </div>
+                    <div class="beneficio-item">
+                        <i class="fas fa-check"></i>
+                        <span>Gráficos visuais interativos</span>
+                    </div>
+                    <div class="beneficio-item">
+                        <i class="fas fa-check"></i>
+                        <span>Controle de investimentos</span>
+                    </div>
+                    <div class="beneficio-item">
+                        <i class="fas fa-check"></i>
+                        <span>Organização mensal</span>
+                    </div>
+                    <div class="beneficio-item">
+                        <i class="fas fa-check"></i>
+                        <span>Funciona no celular e computador</span>
+                    </div>
+                    <div class="beneficio-item">
+                        <i class="fas fa-check"></i>
+                        <span>Suporte por 30 dias</span>
+                    </div>
+                </div>
+                
+                <div class="botoes-compra">
+                    <button class="btn-comprar-agora" onclick="abrirModalCompra()">
+                        <i class="fas fa-shopping-cart"></i> COMPRAR AGORA
+                    </button>
+                    <button class="btn-ja-paguei" onclick="abrirModalJaPaguei()">
+                        <i class="fas fa-check-circle"></i> JÁ PAGUEI
+                    </button>
+                </div>
+                
+                <div class="garantia-info">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Garantia de 30 Dias</span>
+                </div>
+                
+                <div class="seguranca-info">
+                    <i class="fas fa-lock"></i>
+                    <span>Pagamento 100% seguro</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal de Compra -->
+    <div id="modal-compra" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModal('modal-compra')">&times;</span>
+            <h2>Finalizar Compra</h2>
+            <form id="form-compra">
+                <div class="form-group">
+                    <label for="nome">Nome Completo*</label>
+                    <input type="text" id="nome" name="nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">E-mail*</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="whatsapp">WhatsApp*</label>
+                    <input type="tel" id="whatsapp" name="whatsapp" required placeholder="(61) 99999-9999">
+                </div>
+                <div class="form-group">
+                    <label>Forma de Pagamento*</label>
+                    <div class="payment-options">
+                        <label class="payment-option">
+                            <input type="radio" name="pagamento" value="pix" required>
+                            <span><i class="fas fa-qrcode"></i> PIX</span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="pagamento" value="cartao">
+                            <span><i class="fas fa-credit-card"></i> Cartão</span>
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="btn-finalizar">Finalizar Compra</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal PIX -->
+    <div id="modal-pix" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModal('modal-pix')">&times;</span>
+            <h2>Pagamento via PIX</h2>
+            <div class="pix-info">
+                <p>Copie o código PIX abaixo e cole no seu banco:</p>
+                <div class="pix-code">
+                    <textarea id="codigo-pix" readonly>00020126880014br.gov.bcb.pix0136a5b7ad4f-5918-4fc1-aa7a-a631afa24c260226Planilha chave financeira 520400005303986540550.005802BR5924Miguel Cesar Fernandes F6008Brasilia62230519daqr2612692379253246304CA3B</textarea>
+                    <button onclick="copiarPix()" class="btn-copiar">Copiar Código PIX</button>
+                </div>
+                <div class="pix-instrucoes">
+                    <h3>Como pagar:</h3>
+                    <ol>
+                        <li>Abra o app do seu banco</li>
+                        <li>Escolha a opção PIX</li>
+                        <li>Selecione "Copia e Cola"</li>
+                        <li>Cole o código copiado</li>
+                        <li>Confirme o pagamento de R$ 50,00</li>
+                        <li>Após pagar, clique em "Já Paguei" abaixo</li>
+                    </ol>
+                </div>
+                <button class="btn-ja-paguei" onclick="confirmarPagamentoPix()">
+                    <i class="fas fa-check-circle"></i> JÁ PAGUEI
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Já Paguei -->
+    <div id="modal-ja-paguei" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModal('modal-ja-paguei')">&times;</span>
+            <h2>Confirmar Pagamento</h2>
+            <div class="ja-paguei-content">
+                <p>Para confirmar seu pagamento e receber sua planilha, envie seu comprovante via WhatsApp:</p>
+                
+                <div class="whatsapp-section">
+                    <a href="https://wa.me/5561999226352?text=Olá! Acabei de fazer o pagamento da Chave Financeira Libertadora. Segue o comprovante:" 
+                       target="_blank" class="btn-whatsapp">
+                        <i class="fab fa-whatsapp"></i> Enviar Comprovante via WhatsApp
+                    </a>
+                </div>
+                
+                <div class="email-section">
+                    <p>Ou envie por e-mail:</p>
+                    <a href="mailto:contatochavefinanceira@gmail.com?subject=Comprovante de Pagamento - Chave Financeira Libertadora&body=Olá! Segue em anexo o comprovante de pagamento da Chave Financeira Libertadora." 
+                       class="btn-email">
+                        <i class="fas fa-envelope"></i> Enviar por E-mail
+                    </a>
+                </div>
+                
+                <div class="confirmacao-info">
+                    <div class="info-box">
+                        <i class="fas fa-clock"></i>
+                        <p><strong>Aguarde!</strong> Em breve você receberá sua planilha Chave Libertadora no e-mail cadastrado.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Sucesso -->
+    <div id="modal-sucesso" class="modal">
+        <div class="modal-content">
+            <h2>✅ Cadastro Realizado!</h2>
+            <div class="sucesso-content">
+                <p>Seus dados foram registrados com sucesso!</p>
+                <p><strong>Aguarde!</strong> Em breve você receberá sua planilha Chave Libertadora no e-mail cadastrado.</p>
+                <button onclick="fecharModal('modal-sucesso')" class="btn-ok">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>🔑 Chave Financeira Libertadora</h3>
+                    <p>Transformando vidas através da educação financeira.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Contato</h4>
+                    <p><i class="fab fa-whatsapp"></i> (61) 99922-6352</p>
+                    <p><i class="fas fa-envelope"></i> contatochavefinanceira@gmail.com</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Garantia</h4>
+                    <p>30 dias de garantia total</p>
+                    <p>Suporte completo incluído</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Chave Financeira Libertadora. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="site-integration-updated.js"></script>
+</body>
+</html>
 
