@@ -98,18 +98,15 @@ document.addEventListener("DOMContentLoaded", function() {
         const dadosEmail = {
             destinatario: config.emailContato,
             assunto: `Nova compra - Chave Financeira Libertadora`,
-            corpo: `
-                Nova compra realizada:
+            corpo:                 Nova compra realizada:
                 
                 Nome: ${dadosCliente.nome}
-                Email: ${dadosCliente.email}
                 WhatsApp: ${dadosCliente.whatsapp}
                 Forma de Pagamento: ${tipoPagamento}
-                Data: ${new Date().toLocaleString('pt-BR')}
+                Data: ${new Date().toLocaleString(\'pt-BR\')}
                 
-                ${tipoPagamento === 'PIX' ? 'Cliente solicitou confirmação de pagamento PIX.' : 'Pagamento via cartão processado.'}
-            `
-        };
+                ${tipoPagamento === \'PIX\' ? \'Cliente solicitou confirmação de pagamento PIX. Por favor, envie seu e-mail para que possamos enviar a planilha.\' : \'Pagamento via cartão processado.\'}
+            `   };
 
         fetch(`${config.backendUrl}/api/enviar-email`, {
             method: 'POST',
